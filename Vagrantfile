@@ -11,7 +11,7 @@ Vagrant.require_version ">= 2.0.2"
 
 boxes = [
     {
-        :name => "k8s-test-node-1",
+        :name => "k8s-test-node-master",
         :eth1 => "192.168.205.10",
         :mem => "4096",
         :cpu => "2"
@@ -41,4 +41,31 @@ Vagrant.configure(2) do |config|
   end
 
   config.ssh.insert_key = false
+  
+  config.vm.define "k8s-test-node-master" do |master|
+	  master.vm.provision "shell", inline: <<-SHELL
+		echo "install docker ce begin"
+		sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+		sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+		sudo yum makecache fast
+		sudo yum install -y docker-ce
+		sudo docker version
+		sudo systemctl enable docker
+		sudo systemctl start docker
+		echo "install docker ce done"
+		
+		echo "install kubectl begin"
+		curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+		chmod +x ./kubectl
+		sudo mv ./kubectl /usr/bin/kubectl
+		sudo kubectl version
+		echo "install kubectl done"
+		
+		echo "install minikube begin"
+		curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && sudo install minikube-linux-amd64 /usr/bin/minikube
+		sudo minikube config set vm-driver none
+		sudo minikube version
+		echo "install minikube done"
+	  SHELL
+  end
 end
