@@ -43,6 +43,8 @@ Vagrant.configure(2) do |config|
   config.ssh.insert_key = false
   
   config.vm.define "k8s-test-node-master" do |master|
+      # vagrant plugin install vagrant-vbguest
+      master.vm.synced_folder "./simples", "/home/vagrant/simples"
 	  master.vm.provision "shell", inline: <<-SHELL
 		echo "install docker ce begin"
 		sudo yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -66,6 +68,10 @@ Vagrant.configure(2) do |config|
 		sudo minikube config set vm-driver none
 		sudo minikube version
 		echo "install minikube done"
+		
+		echo "install tools"
+		sudo yum install -y vim
+		echo "install tools done"
 	  SHELL
   end
 end
