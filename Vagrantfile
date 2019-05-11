@@ -70,6 +70,7 @@ Vagrant.configure(2) do |config|
 		echo "install minikube done"
 		
 		echo "install tools"
+		sudo yum install -y socat
 		sudo yum install -y vim
 		echo "install tools done"
 	  SHELL
