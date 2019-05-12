@@ -42,7 +42,12 @@ Vagrant.configure(2) do |config|
 
   config.ssh.insert_key = false
   
+  if Vagrant.has_plugin?("vagrant-vbguest")
+      config.vbguest.auto_update = false  
+  end
+  
   config.vm.define "k8s-test-node-master" do |master|
+  
       # vagrant plugin install vagrant-vbguest
       master.vm.synced_folder "./simples", "/home/vagrant/simples"
 	  master.vm.provision "shell", inline: <<-SHELL
