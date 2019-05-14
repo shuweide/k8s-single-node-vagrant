@@ -59,6 +59,7 @@ Vagrant.configure(2) do |config|
 		sudo docker version
 		sudo systemctl enable docker
 		sudo systemctl start docker
+		sudo usermod -aG docker vagrant
 		echo "install docker ce done"
 		
 		echo "install kubectl begin"
@@ -77,7 +78,14 @@ Vagrant.configure(2) do |config|
 		echo "install tools"
 		sudo yum install -y socat
 		sudo yum install -y vim
+		sudo yum install -y epel-release
+		sudo yum install -y python-pip
+		sudo yum upgrade -y python*
 		echo "install tools done"
+		
+		echo "install docker-compose"
+		sudo pip install docker-compose
+		echo "instal docker-compose done"
 	  SHELL
   end
 end

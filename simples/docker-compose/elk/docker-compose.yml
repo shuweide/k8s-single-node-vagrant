@@ -1,0 +1,42 @@
+version: '2'
+services:
+  elasticsearch:
+    image: docker.io/elasticsearch:6.5.1
+    ports:
+      - "29200:9200"
+    restart: always
+    environment:
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx1g"
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.io/kibana:6.5.1
+    ports:
+      - "25601:5601"
+    restart: always
+    environment:
+      - ELASTICSEARCH_URL=http://192.168.205.10:29200
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.io/logstash:6.5.1
+    ports:
+      - "24560:4560"
+    restart: always
+    volumes:
+      - ./logstash.conf:/etc/logstash.conf
+    depends_on:
+      - elasticsearch
+    entrypoint:
+      - logstash
+      - -f
+      - /etc/logstash.conf
+
+volumes:
+  esdata1:
+    driver: local
+
