@@ -81,6 +81,7 @@ Vagrant.configure(2) do |config|
 		sudo yum install -y epel-release
 		sudo yum install -y python-pip
 		sudo yum upgrade -y python*
+		sudo yum install -y bash-completion
 		echo "install tools done"
 		
 		echo "install docker-compose"
